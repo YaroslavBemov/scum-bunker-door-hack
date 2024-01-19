@@ -2,29 +2,30 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import './App.css';
 import TextField from './TextField';
 import { InitialState, InputOperator } from './types';
+import { calculate } from './helpers';
 
 const initialState: InitialState = {
-	inputNumber: '',
-	outputA: '',
-	outputB: '',
+	inputNumber: '10',
+	outputA: '40',
+	outputB: '15',
 	inputOperator1: {
-		A: '',
-		B: '',
+		A: '+1',
+		B: '-1',
 		number: '1',
 	},
 	inputOperator2: {
-		A: '',
-		B: '',
+		A: '+5',
+		B: '+5',
 		number: '2',
 	},
 	inputOperator3: {
-		A: '',
-		B: '',
+		A: '+5',
+		B: '+15',
 		number: '3',
 	},
 	inputOperator4: {
-		A: '',
-		B: '',
+		A: '*2',
+		B: '/2',
 		number: '4',
 	},
 	inputOperator5: {
@@ -47,12 +48,11 @@ const initialState: InitialState = {
 		B: '',
 		number: '8',
 	},
-	resultA: '',
-	resultB: '',
 };
 
 function App() {
 	const [state, setState] = useState(initialState);
+	const [result, setResult] = useState<string[]>([]);
 
 	const operatorsArray: InputOperator[] = [
 		state.inputOperator1,
@@ -80,8 +80,19 @@ function App() {
 		});
 	};
 
+	const handleClick = () => {
+		const result = calculate(
+			state.inputNumber,
+			operatorsArray,
+			state.outputA,
+			state.outputB
+		);
+		console.log(result);
+		setResult(result);
+	};
+
 	useEffect(() => {
-		console.log(state);
+		// console.log(state);
 	}, [state]);
 
 	return (
@@ -269,6 +280,8 @@ function App() {
 					name='inputOperator8B'
 				/>
 			</form>
+			<button onClick={handleClick}>Calc</button>
+			<div>Result: {result}</div>
 		</>
 	);
 }

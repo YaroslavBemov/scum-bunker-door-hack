@@ -1,9 +1,10 @@
-/* eslint-disable no-unreachable */
-export const getNumber = (string) => {
+import { InputOperator, Result } from './types';
+
+export const getNumber = (string: string): number => {
 	return +string.substring(1);
 };
 
-export const getOperation = (string, number) => {
+export const getOperation = (string: string, number: number): number => {
 	switch (string.substring(0, 1)) {
 		case '/':
 			return number / getNumber(string);
@@ -22,24 +23,39 @@ export const getOperation = (string, number) => {
 	}
 };
 
-export const operate = (operator, number) => {
-	return getOperation(operator.A, number);
+export const operate = (
+	operator: InputOperator,
+	numberA: number,
+	numberB: number
+): Result => {
+	const result = { A: 0, B: 0 };
+	result.A = getOperation(operator.A, numberA);
+	result.B = getOperation(operator.B, numberB);
+	return result;
 };
 
 export const calculate = (
-	operatorsArray,
-	outputA,
-	resultA,
-	outputB,
-	resultB,
-	resetResult
-) => {
+	inputNumber: string,
+	operatorsArray: InputOperator[],
+	outputA: string,
+	outputB: string
+): string[] => {
 	let success = false;
-	const resultOperators = [];
+	const resultOperators: string[] = [];
+	let resultA = +inputNumber;
+	let resultB = +inputNumber;
+
+	const resetResult = () => {
+		resultA = +inputNumber;
+		resultB = +inputNumber;
+	};
+	// const operandA = +resultA;
+	// const operandB = +resultB;
+
 	// 1
 	for (let i = 0; i < operatorsArray.length; i++) {
-		operate(operatorsArray[i]);
-		if (outputA == resultA && outputB == resultB) {
+		const result = operate(operatorsArray[i], resultA, resultB);
+		if (+outputA == result.A && +outputB == result.B) {
 			success = true;
 			resultOperators.push(operatorsArray[i].number);
 		} else {
@@ -51,10 +67,10 @@ export const calculate = (
 	if (!success) {
 		for (let i = 0; i < operatorsArray.length; i++) {
 			for (let j = i + 1; j < operatorsArray.length; j++) {
-				operate(operatorsArray[i]);
-				operate(operatorsArray[j]);
+				let result = operate(operatorsArray[i], resultA, resultB);
+				result = operate(operatorsArray[j], result.A, result.B);
 
-				if (outputA == resultA && outputB == resultB) {
+				if (+outputA == result.A && +outputB == result.B) {
 					success = true;
 					resultOperators.push(operatorsArray[i].number);
 					resultOperators.push(operatorsArray[j].number);
@@ -70,11 +86,11 @@ export const calculate = (
 		for (let i = 0; i < operatorsArray.length; i++) {
 			for (let j = i + 1; j < operatorsArray.length; j++) {
 				for (let k = j + 1; k < operatorsArray.length; k++) {
-					operate(operatorsArray[i]);
-					operate(operatorsArray[j]);
-					operate(operatorsArray[k]);
+					let result = operate(operatorsArray[i], resultA, resultB);
+					result = operate(operatorsArray[j], result.A, result.B);
+					result = operate(operatorsArray[k], result.A, result.B);
 
-					if (outputA == resultA && outputB == resultB) {
+					if (+outputA == result.A && +outputB == result.B) {
 						success = true;
 						resultOperators.push(operatorsArray[i].number);
 						resultOperators.push(operatorsArray[j].number);
@@ -93,12 +109,12 @@ export const calculate = (
 			for (let j = i + 1; j < operatorsArray.length; j++) {
 				for (let k = j + 1; k < operatorsArray.length; k++) {
 					for (let l = k + 1; l < operatorsArray.length; l++) {
-						operate(operatorsArray[i]);
-						operate(operatorsArray[j]);
-						operate(operatorsArray[k]);
-						operate(operatorsArray[l]);
+						let result = operate(operatorsArray[i], resultA, resultB);
+						result = operate(operatorsArray[j], result.A, result.B);
+						result = operate(operatorsArray[k], result.A, result.B);
+						result = operate(operatorsArray[l], result.A, result.B);
 
-						if (outputA == resultA && outputB == resultB) {
+						if (+outputA == result.A && +outputB == result.B) {
 							success = true;
 							resultOperators.push(operatorsArray[i].number);
 							resultOperators.push(operatorsArray[j].number);
@@ -120,13 +136,13 @@ export const calculate = (
 				for (let k = j + 1; k < operatorsArray.length; k++) {
 					for (let l = k + 1; l < operatorsArray.length; l++) {
 						for (let q = l + 1; q < operatorsArray.length; q++) {
-							operate(operatorsArray[i]);
-							operate(operatorsArray[j]);
-							operate(operatorsArray[k]);
-							operate(operatorsArray[l]);
-							operate(operatorsArray[q]);
+							let result = operate(operatorsArray[i], resultA, resultB);
+							result = operate(operatorsArray[j], result.A, result.B);
+							result = operate(operatorsArray[k], result.A, result.B);
+							result = operate(operatorsArray[l], result.A, result.B);
+							result = operate(operatorsArray[q], result.A, result.B);
 
-							if (outputA == resultA && outputB == resultB) {
+							if (+outputA == result.A && +outputB == result.B) {
 								success = true;
 								resultOperators.push(operatorsArray[i].number);
 								resultOperators.push(operatorsArray[j].number);
@@ -151,14 +167,14 @@ export const calculate = (
 					for (let l = k + 1; l < operatorsArray.length; l++) {
 						for (let q = l + 1; q < operatorsArray.length; q++) {
 							for (let w = q + 1; w < operatorsArray.length; w++) {
-								operate(operatorsArray[i]);
-								operate(operatorsArray[j]);
-								operate(operatorsArray[k]);
-								operate(operatorsArray[l]);
-								operate(operatorsArray[q]);
-								operate(operatorsArray[w]);
+								let result = operate(operatorsArray[i], resultA, resultB);
+								result = operate(operatorsArray[j], result.A, result.B);
+								result = operate(operatorsArray[k], result.A, result.B);
+								result = operate(operatorsArray[l], result.A, result.B);
+								result = operate(operatorsArray[q], result.A, result.B);
+								result = operate(operatorsArray[w], result.A, result.B);
 
-								if (outputA == resultA && outputB == resultB) {
+								if (+outputA == result.A && +outputB == result.B) {
 									success = true;
 									resultOperators.push(operatorsArray[i].number);
 									resultOperators.push(operatorsArray[j].number);
@@ -186,15 +202,15 @@ export const calculate = (
 						for (let q = l + 1; q < operatorsArray.length; q++) {
 							for (let w = q + 1; w < operatorsArray.length; w++) {
 								for (let e = w + 1; e < operatorsArray.length; e++) {
-									operate(operatorsArray[i]);
-									operate(operatorsArray[j]);
-									operate(operatorsArray[k]);
-									operate(operatorsArray[l]);
-									operate(operatorsArray[q]);
-									operate(operatorsArray[w]);
-									operate(operatorsArray[e]);
+									let result = operate(operatorsArray[i], resultA, resultB);
+									result = operate(operatorsArray[j], result.A, result.B);
+									result = operate(operatorsArray[k], result.A, result.B);
+									result = operate(operatorsArray[l], result.A, result.B);
+									result = operate(operatorsArray[q], result.A, result.B);
+									result = operate(operatorsArray[w], result.A, result.B);
+									result = operate(operatorsArray[e], result.A, result.B);
 
-									if (outputA == resultA && outputB == resultB) {
+									if (+outputA == result.A && +outputB == result.B) {
 										success = true;
 										resultOperators.push(operatorsArray[i].number);
 										resultOperators.push(operatorsArray[j].number);
@@ -225,16 +241,16 @@ export const calculate = (
 							for (let w = q + 1; w < operatorsArray.length; w++) {
 								for (let e = w + 1; e < operatorsArray.length; e++) {
 									for (let r = e + 1; r < operatorsArray.length; r++) {
-										operate(operatorsArray[i]);
-										operate(operatorsArray[j]);
-										operate(operatorsArray[k]);
-										operate(operatorsArray[l]);
-										operate(operatorsArray[q]);
-										operate(operatorsArray[w]);
-										operate(operatorsArray[e]);
-										operate(operatorsArray[r]);
+										let result = operate(operatorsArray[i], resultA, resultB);
+										result = operate(operatorsArray[j], result.A, result.B);
+										result = operate(operatorsArray[k], result.A, result.B);
+										result = operate(operatorsArray[l], result.A, result.B);
+										result = operate(operatorsArray[q], result.A, result.B);
+										result = operate(operatorsArray[w], result.A, result.B);
+										result = operate(operatorsArray[e], result.A, result.B);
+										result = operate(operatorsArray[r], result.A, result.B);
 
-										if (outputA == resultA && outputB == resultB) {
+										if (+outputA == result.A && +outputB == result.B) {
 											success = true;
 											resultOperators.push(operatorsArray[i].number);
 											resultOperators.push(operatorsArray[j].number);

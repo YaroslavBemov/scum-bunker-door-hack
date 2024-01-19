@@ -10,12 +10,15 @@ export interface InitialState {
 	inputOperator6: InputOperator;
 	inputOperator7: InputOperator;
 	inputOperator8: InputOperator;
-	resultA: string;
-	resultB: string;
 }
 
 export interface InputOperator {
 	A: string;
 	B: string;
 	number: string;
+}
+
+export interface Result {
+	A: number;
+	B: number;
 }
