@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, forwardRef } from 'react';
+import { FC, forwardRef } from 'react';
 
 type InputElement = HTMLInputElement | HTMLTextAreaElement;
 type InputChangeEvent = React.ChangeEvent<InputElement>;
@@ -10,6 +10,7 @@ interface TextInputProps {
 	id?: string;
 	value: string;
 	onChange: (name: string, value: string) => void;
+	onFocus: (name: string) => void;
 	placeholder?: string;
 	autoFocus?: boolean;
 	name?: string;
@@ -25,7 +26,7 @@ interface LabelProps {
 type TextFieldProps = TextInputProps & LabelProps;
 
 const TextInput = forwardRef<InputElement, TextInputProps>(
-	({ onChange, textarea = false, ...rest }, ref) => {
+	({ onChange, onFocus, textarea = false, ...rest }, ref) => {
 		const InputElement = textarea ? 'textarea' : 'input';
 		return (
 			<InputElement
@@ -36,6 +37,7 @@ const TextInput = forwardRef<InputElement, TextInputProps>(
 				onChange={({ target: { name, value } }: InputChangeEvent) =>
 					onChange(name, value)
 				}
+				onFocus={({ target: { name } }: InputChangeEvent) => onFocus(name)}
 				{...rest}
 			/>
 		);
@@ -55,6 +57,7 @@ const TextField: FC<TextFieldProps> = (props) => {
 		labelText = '',
 		value,
 		onChange,
+		onFocus,
 		autoFocus = false,
 		name,
 		type = 'text',
@@ -63,17 +66,20 @@ const TextField: FC<TextFieldProps> = (props) => {
 
 	return (
 		<>
-			{label && <Label inputId={inputId} labelText={labelText} />}
-			<TextInput
-				id={inputId}
-				value={value}
-				onChange={onChange}
-				name={name}
-				placeholder={labelText}
-				autoFocus={autoFocus}
-				type={type}
-				textarea={textarea}
-			/>
+			<div>
+				{label && <Label inputId={inputId} labelText={labelText} />}
+				<TextInput
+					id={inputId}
+					value={value}
+					onChange={onChange}
+					onFocus={onFocus}
+					name={name}
+					placeholder={labelText}
+					autoFocus={autoFocus}
+					type={type}
+					textarea={textarea}
+				/>
+			</div>
 		</>
 	);
 };
